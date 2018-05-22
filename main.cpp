@@ -3,7 +3,7 @@
 using namespace std;
 #define PrintTree() { for(auto it : tree){ cout << it << ' '; } cout << endl; }
 
-typedef CRBTree<int, greater<int>>::CRBNode* node_type;
+typedef const CRBTree<int, greater<int>>::CRBNode* node_type;
 
 void PreorderDF(node_type v){
 	if(v == nullptr)
@@ -30,7 +30,7 @@ void PostorderDF(node_type v){
 }
 
 
-int main() {
+int main(int argc, char** argv) {
 	CRBTree<int, greater<int>> tree;
 	
 	for(auto it = tree.begin(); it != tree.end(); ++it){

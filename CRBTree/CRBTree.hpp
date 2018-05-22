@@ -72,7 +72,7 @@ public:
 		return check4(false, _root);
 	}
 	
-	CRootRBNode* getRoot() { return _root; }
+	const CRootRBNode* getRoot() { return _root; }
 	
 private:
 	
