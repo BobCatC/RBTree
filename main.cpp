@@ -2,12 +2,30 @@
 #include <iostream>
 using namespace std;
 
-typedef int value_type_main;
-typedef greater<value_type_main> comp;
+class CPoint{
+public:
+	int x, y;
+	CPoint(int i){
+		x = i;
+		y = i + rand() % 100;
+	}
+	bool operator==(const CPoint& p) const { return ( x * y == p.x * p.y );}
+	bool operator>(const CPoint& p) const { return ( x * y > p.x * p.y ); }
+	
+	bool operator!=(const CPoint& p) const { return !(*this == p); }
+	bool operator<(const CPoint& p) const { return !(*this > p) && (*this != p); }
+};
+
+ostream& operator<<(ostream& os, const CPoint& p){
+	os << "( " << p.x << " : " << p.y << " )";
+	return os;
+}
+
+typedef CPoint value_type_main;
+typedef less<value_type_main> comp;
+typedef const CRBTree<value_type_main, comp>::CRBNode* node_type;
 
 #define PrintTree() { for(auto it : tree){ cout << it << ' '; } cout << endl; }
-
-typedef const CRBTree<value_type_main, comp>::CRBNode* node_type;
 
 void PreorderDF(node_type v){
 	if(v == nullptr)
@@ -169,7 +187,7 @@ int main(int argc, char** argv) {
 	tree.remove(-10);
 	srand((unsigned int)clock());
 	for(int c = 0; c < 10; ++c){
-		int n = 100 + rand() % 100;
+		int n = 1 + rand() % 10;
 		for(int i = 0; i < n; ++i){
 			tree.insert(rand() % 1000 - 100);
 		}
@@ -221,5 +239,19 @@ int main(int argc, char** argv) {
 	cout << "Check of property 2 : " << checkIfRootIsBlack(tree) << endl;
 	cout << "Check of preperty 4 : " << checkProperty4(tree) << endl;
 
+	auto res1 = tree.insert(1);
+	auto res2 = tree.find(1);
+	tree.remove(1);
+	auto res4 = tree.begin();
+	auto res5 = tree.beginBF();
+	auto res6 = tree.beginInorderDF();
+	auto res7 = tree.beginPreorderDF();
+	auto res8 = tree.beginPostorderDF();
+	auto res9 = tree.empty();
+	auto resA = tree.end();
+	auto resB = tree.findNode(2);
+	auto resC = tree.getRoot();
+	auto resD = tree.size();
+	
 	return 0;
 }

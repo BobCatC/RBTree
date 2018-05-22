@@ -17,16 +17,27 @@ public:
 #include "CRBTraversalIterators.hpp"
 	
 	CRBTree() :
-	_root(nullptr) { }
+	_root(nullptr),
+	_size(0) { }
 	
-	void insert(const value_type& value) {
-		_root = insert_node(value);
+	const_iterator insert(const value_type& value) {
+		CRBNode* new_node;
+		_root = insert_node(value, &new_node);
+		return const_iterator(_root, new_node);
 	}
 	
 	void remove(const value_type& value){
 		CRBNode* n = findNode(value);
 		remove_node(n);
 	}
+	
+	const_iterator find(const value_type& value){
+		CRBNode* n = findNode(value);
+		return const_iterator(_root, n);
+	}
+	
+	bool empty() const { return (_size == 0); }
+	size_t size() const { return _size; }
 	
 	const_iterator begin() const { return const_iterator(_root, findMin(_root)); }
 	iteratorPreorderDF beginPreorderDF() const { return iteratorPreorderDF(_root); }
@@ -65,13 +76,14 @@ public:
 private:
 	
 	
-	CRootRBNode* insert_node(const value_type& value) {
+	CRootRBNode* insert_node(const value_type& value, CRBNode** new_node_return) {
 		CRootRBNode* root = _root;
 		CRBNode* crt = root;
 		CRBNode* new_node = nullptr;
 		if(root == nullptr){
 			root = new CRootRBNode(value);
 			new_node = root;
+			++_size;
 		}
 		else{
 			while(true){
@@ -81,6 +93,7 @@ private:
 					}
 					else{
 						crt->setRightChild(new_node = new CRBNode(value, crt));
+						++_size;
 						break;
 					}
 				}
@@ -91,6 +104,7 @@ private:
 						}
 						else{
 							crt->setLeftChild(new_node = new CRBNode(value, crt));
+							++_size;
 							break;
 						}
 					}
@@ -103,14 +117,17 @@ private:
 		if(new_node != nullptr){
 			root = insert_case1(root, new_node);
 		}
+		*new_node_return = new_node == nullptr ? crt : new_node;
 		return root;
 	}
 	
 #include "CRBTreeModifyFunctions.hpp"
 	
 	void remove_node(CRBNode* n) {
-		if(n != nullptr)
+		if(n != nullptr){
+			--_size;
 			_root = remove_node_by_pointer(_root, n);
+		}
 	}
 	
 	CRootRBNode* remove_node_by_pointer(CRootRBNode* root, CRBNode* n) {
@@ -152,7 +169,7 @@ private:
 	
 protected:
 	CRootRBNode* _root;
-	int crtBlackHeight;
+	size_t _size;
 };
 
 #endif /* CRBTree_h */
