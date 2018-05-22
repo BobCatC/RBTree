@@ -2,6 +2,7 @@
 #define CRBTree_h
 
 #include <iostream>
+#include <queue>
 using namespace std;
 
 #define is_leaf(n) ((n) == nullptr ? true : false)
@@ -14,7 +15,9 @@ public:
 	
 #include "CRBTreeNode.hpp"
 	
-#include "RBTreeStdIterator.hpp"
+#include "CRBTreeStdIterator.hpp"
+	
+#include "CRBTraversalIterators.hpp"
 	
 	CRBTree() :
 	_root(nullptr) { }
@@ -29,6 +32,11 @@ public:
 	}
 	
 	const_iterator begin() const { return const_iterator(_root, findMin(_root)); }
+	iteratorPreorderDF beginPreorderDF() const { return iteratorPreorderDF(_root); }
+	iteratorInorderDF beginInorderDF() const { return iteratorInorderDF(_root); }
+	iteratorPostorderDF beginPostorderDF() const { return iteratorPostorderDF(_root); }
+	iteratorBF beginBF() const { return iteratorBF(_root); }
+	
 	const_iterator end() const { return const_iterator(_root, nullptr, false, true); }
 	const_iterator find(const value_type& value) const { return const_iterator(_root, findNode(value)); }
 	
@@ -63,6 +71,8 @@ public:
 	bool checkProperty4() const {
 		return check4(false, _root);
 	}
+	
+	CRootRBNode* getRoot() { return _root; }
 	
 private:
 	

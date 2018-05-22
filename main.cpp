@@ -3,6 +3,33 @@
 using namespace std;
 #define PrintTree() { for(auto it : tree){ cout << it << ' '; } cout << endl; }
 
+typedef CRBTree<int, greater<int>>::CRBNode* node_type;
+
+void PreorderDF(node_type v){
+	if(v == nullptr)
+		return;
+	cout << v->getValue() << ' ';
+	PreorderDF(v->getLeftChild());
+	PreorderDF(v->getRightChild());
+}
+
+void InorderDF(node_type v){
+	if(v == nullptr)
+		return;
+	InorderDF(v->getLeftChild());
+	cout << v->getValue() << ' ';
+	InorderDF(v->getRightChild());
+}
+
+void PostorderDF(node_type v){
+	if(v == nullptr)
+		return;
+	PostorderDF(v->getLeftChild());
+	PostorderDF(v->getRightChild());
+	cout << v->getValue() << ' ';
+}
+
+
 int main() {
 	CRBTree<int, greater<int>> tree;
 	
@@ -97,15 +124,46 @@ int main() {
 		}
 	
 	
-		for(int i = 0; i < n * 5; ++i){
-			int iRem = rand() % 1000 - 100;
-			tree.remove(iRem);
-		}
+		
 	}
 	
 	
 	cout << "Final check of RBTree" << endl;
 	PrintTree();
+	
+	cout << endl << "\tRight Preorder DF" << endl;
+	PreorderDF(tree.getRoot());
+	
+	cout << endl << "Preorder DF" << endl;
+	for(auto itPreorderDF = tree.beginPreorderDF(); itPreorderDF != tree.end(); ++itPreorderDF){
+		cout << *itPreorderDF << ' ';
+	}
+	cout << endl;
+	
+	cout << endl << "\tRight Inorder DF" << endl;
+	InorderDF(tree.getRoot());
+	
+	cout << endl << "Inorder DF" << endl;
+	for(auto itInorderDF = tree.beginInorderDF(); itInorderDF != tree.end(); ++itInorderDF){
+		cout << *itInorderDF << ' ';
+	}
+	cout << endl;
+	
+	cout << endl << "\tRight Postorder DF" << endl;
+	PostorderDF(tree.getRoot());
+	
+	cout << endl << "Postorder DF" << endl;
+	for(auto itPostorder = tree.beginPostorderDF(); itPostorder != tree.end(); ++itPostorder){
+		cout << *itPostorder << ' ';
+	}
+	cout << endl;
+	
+	cout << endl << "BF" << endl;
+	for(auto itBF = tree.beginBF(); itBF != tree.end(); ++itBF){
+		cout << *itBF << ' ';
+	}
+	cout << endl;
+	
 	tree.printBlackHeight();
 	cout << endl;
 	
