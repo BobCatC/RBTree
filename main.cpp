@@ -1,26 +1,62 @@
-#include "CRBTree.hpp"
+#include "CRBTree/CRBTree.hpp"
 #include <iostream>
 using namespace std;
+#define PrintTree() { for(auto it : tree){ cout << it << ' '; } cout << endl; }
+
 int main() {
-	CRBTree tree;
-	tree.insert(1);
-	tree.insert(2);
-	tree.insert(4);
-	tree.insert(5);
-	tree.insert(6);
+	CRBTree<int, greater<int>> tree;
 	
-	//tree.remove(1);
-	tree.printBlackHeight();
-	cout << endl;
-	//tree.remove(4);
-	tree.printBlackHeight();
-	cout << endl;
-	//tree.remove(6);
+	for(auto it = tree.begin(); it != tree.end(); ++it){
+		cout << *it;
+	}
+	
+	auto itFind = tree.find(12);
+	
+	tree.insert(0);
+	tree.insert(20);
+	tree.insert(-20);
+	tree.insert(10);
+	tree.insert(-10);
+	tree.insert(-30);
+	tree.insert(30);
+	tree.remove(0);
+	tree.remove(0);
+	tree.remove(1);
+	
+	itFind = tree.find(30);
+	
+	PrintTree();
 	tree.printBlackHeight();
 	cout << endl;
 	
-	tree.printBlackHeight();
-	cout << endl;
+	tree.insert(1);;
+	tree.insert(2);;
+	tree.insert(4);;
+	tree.insert(5);;
+	tree.insert(6);;
+	tree.insert(-2);;
+	tree.insert(88);;
+	tree.insert(0);;
+	tree.insert(-1);;
+	tree.insert(0);;
+	tree.insert(88);;
+	tree.insert(-10);;
+	tree.insert(-5);;
+	tree.insert(-4);;
+	tree.insert(-3);;
+	
+	PrintTree();
+	
+	tree.remove(111);
+	
+	PrintTree();
+	
+	tree.remove(0);
+	tree.remove(88);
+	tree.remove(6);
+	tree.remove(-5);
+	
+	PrintTree();
 	
 	tree.insert(-1);
 	tree.insert(3);
@@ -53,22 +89,23 @@ int main() {
 	tree.remove(-20);
 	tree.remove(10);
 	tree.remove(-10);
-	
+	srand(clock());
 	for(int c = 0; c < 10; ++c){
-		int n = 10000 + rand() % 10000;
+		int n = 100 + rand() % 100;
 		for(int i = 0; i < n; ++i){
-			tree.insert(rand() % 100000);
+			tree.insert(rand() % 1000 - 100);
 		}
 	
 	
-		for(int i = 0; i < n *30; ++i){
-			int iRem = rand() % 100000;
+		for(int i = 0; i < n * 5; ++i){
+			int iRem = rand() % 1000 - 100;
 			tree.remove(iRem);
 		}
 	}
 	
 	
 	cout << "Final check of RBTree" << endl;
+	PrintTree();
 	tree.printBlackHeight();
 	cout << endl;
 	
