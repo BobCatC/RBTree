@@ -54,6 +54,7 @@ public:
 	
 	bool isLeftChild() const { return ( _parent != nullptr && _parent->_left_child == this ); }
 	bool isRightChild() const { return ( _parent!= nullptr && _parent->_right_child == this); }
+	bool isNullLeaf() const { return ( this == nullptr ); }
 	
 	CGrandparentRBNode* getGrandParent() const { return ( _parent == nullptr ? nullptr : _parent->_parent ); }
 	CUncleRBNode* getUncle() const {

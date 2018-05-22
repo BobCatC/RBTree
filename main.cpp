@@ -1,9 +1,13 @@
 #include "CRBTree/CRBTree.hpp"
 #include <iostream>
 using namespace std;
+
+typedef int value_type_main;
+typedef greater<value_type_main> comp;
+
 #define PrintTree() { for(auto it : tree){ cout << it << ' '; } cout << endl; }
 
-typedef const CRBTree<int, greater<int>>::CRBNode* node_type;
+typedef const CRBTree<value_type_main, comp>::CRBNode* node_type;
 
 void PreorderDF(node_type v){
 	if(v == nullptr)
@@ -30,8 +34,55 @@ void PostorderDF(node_type v){
 }
 
 
+bool checkIfRootIsBlack(const CRBTree<value_type_main, comp>& tree) {
+	node_type root = tree.getRoot();
+	return root->isBlack();
+}
+
+bool check4(bool fLastWasRed, node_type n) {
+	if(n == nullptr)
+		return true;
+	if(fLastWasRed){
+		if(n->isRed()){
+			return false;
+		}
+	}
+	bool isRed = n->isRed();
+	return check4(isRed, n->getLeftChild());
+	return check4(isRed, n->getRightChild());
+}
+bool checkProperty4(const CRBTree<value_type_main, comp>& tree){
+	return check4(false, tree.getRoot());
+}
+
+int crtBlackHeight = 0;
+void recPrintBlackHeight(node_type crt) {
+	if(crt == nullptr){
+		return;
+	}
+	if(crt->isBlack()){
+		++crtBlackHeight;
+	}
+	if(!crt->fHasLeftChild() && !crt->fHasRightChild()){
+		cout << crt->getValue() << "\tbh == " << crtBlackHeight << endl;
+	}
+	recPrintBlackHeight(crt->getRightChild());
+	
+	recPrintBlackHeight(crt->getLeftChild());
+	
+	if(crt->isBlack()){
+		--crtBlackHeight;
+	}
+}
+void printBlackHeight(const CRBTree<value_type_main, comp>& tree) {
+	crtBlackHeight = 0;
+	recPrintBlackHeight(tree.getRoot());
+}
+
+
+
 int main(int argc, char** argv) {
-	CRBTree<int, greater<int>> tree;
+	CRBTree<value_type_main, comp> tree;
 	
 	for(auto it = tree.begin(); it != tree.end(); ++it){
 		cout << *it;
@@ -53,7 +104,7 @@ int main(int argc, char** argv) {
 	itFind = tree.find(30);
 	
 	PrintTree();
-	tree.printBlackHeight();
+	printBlackHeight(tree);
 	cout << endl;
 	
 	tree.insert(1);;
@@ -90,7 +141,7 @@ int main(int argc, char** argv) {
 	tree.insert(7);
 	tree.insert(7);
 	
-	tree.printBlackHeight();
+	printBlackHeight(tree);
 	cout << endl;
 	
 	tree.insert(8);
@@ -98,7 +149,7 @@ int main(int argc, char** argv) {
 	tree.insert(12);
 	
 	tree.insert(9);
-	tree.printBlackHeight();
+	printBlackHeight(tree);
 	cout << endl;
 	tree.insert(10);
 	tree.insert(-6);
@@ -107,7 +158,7 @@ int main(int argc, char** argv) {
 	tree.insert(-8);
 	tree.insert(-10);
 	tree.insert(-20);
-	tree.printBlackHeight();
+	printBlackHeight(tree);
 	cout << endl;
 	tree.insert(-19);
 	tree.insert(-18);
@@ -116,7 +167,7 @@ int main(int argc, char** argv) {
 	tree.remove(-20);
 	tree.remove(10);
 	tree.remove(-10);
-	srand(clock());
+	srand((unsigned int)clock());
 	for(int c = 0; c < 10; ++c){
 		int n = 100 + rand() % 100;
 		for(int i = 0; i < n; ++i){
@@ -164,11 +215,11 @@ int main(int argc, char** argv) {
 	}
 	cout << endl;
 	
-	tree.printBlackHeight();
+	printBlackHeight(tree);
 	cout << endl;
 	
-	cout << "Check of property 2 : " << tree.checkIfRootIsBlack() << endl;
-	cout << "Check of preperty 4 : " << tree.checkProperty4() << endl;
+	cout << "Check of property 2 : " << checkIfRootIsBlack(tree) << endl;
+	cout << "Check of preperty 4 : " << checkProperty4(tree) << endl;
 
 	return 0;
 }
