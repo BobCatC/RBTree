@@ -19,6 +19,8 @@ public:
 	CRBTree() :
 	_root(nullptr),
 	_size(0) { }
+	CRBTree(const CRBTree& tree) { _root = copyTree(tree.getRoot(), nullptr); _size = tree.size(); }
+	~CRBTree() { freeMemOfTree(_root); }
 	
 	const_iterator insert(const value_type& value) {
 		CRBNode* new_node;
@@ -71,7 +73,7 @@ public:
 	
 	
 	
-	const CRootRBNode* getRoot() const { return _root; }
+	CRootRBNode* getRoot() const { return _root; }
 	
 private:
 	

@@ -61,4 +61,26 @@ static CRBNode* findPrevNode(CRBNode* root, CRBNode* start) {
 }
 
 
+
+static void freeMemOfTree(CRBNode* crt){
+	CRBNode* left, *right;
+	if(crt == nullptr)
+		return;
+	left = crt->getLeftChild();
+	right = crt->getRightChild();
+	delete crt;
+	freeMemOfTree(left);
+	freeMemOfTree(right);
+}
+
+static CRBNode* copyTree(CRBNode* crtOther, CRBNode* parent) {
+	CRBNode* crt = nullptr;
+	if(crtOther != nullptr){
+		crt = new CRBNode(crtOther->getValue(), parent, nullptr, nullptr, crt->isBlack() ? black : red);
+		crt->setLeftChild(copyTree(crtOther->getLeftChild(), crt));
+		crt->setRightChild(copyTree(crtOther->getRightChild(), crt));
+	}
+	return crt;
+}
+
 #endif /* StdTreeFunctions_h */

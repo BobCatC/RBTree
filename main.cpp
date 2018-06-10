@@ -2,6 +2,8 @@
 #include <iostream>
 using namespace std;
 
+#define NO_TRAVERSAL
+
 class CPoint{
 public:
 	int x, y;
@@ -17,7 +19,9 @@ public:
 };
 
 ostream& operator<<(ostream& os, const CPoint& p){
+#ifndef NO_TRAVERSAL
 	os << "( " << p.x << " : " << p.y << " )";
+#endif
 	return os;
 }
 
@@ -26,29 +30,40 @@ typedef less<value_type_main> comp;
 typedef const CRBTree<value_type_main, comp>::CRBNode* node_type;
 
 #define PrintTree() { for(auto it : tree){ cout << it << ' '; } cout << endl; }
+#define PrintTree() {}
 
 void PreorderDF(node_type v){
+#ifndef NO_TRAVERSAL
 	if(v == nullptr)
 		return;
 	cout << v->getValue() << ' ';
 	PreorderDF(v->getLeftChild());
 	PreorderDF(v->getRightChild());
+#endif
 }
 
 void InorderDF(node_type v){
+#ifndef NO_TRAVERSAL
+
 	if(v == nullptr)
 		return;
 	InorderDF(v->getLeftChild());
 	cout << v->getValue() << ' ';
 	InorderDF(v->getRightChild());
+#endif
+
 }
 
 void PostorderDF(node_type v){
+#ifndef NO_TRAVERSAL
+
 	if(v == nullptr)
 		return;
 	PostorderDF(v->getLeftChild());
 	PostorderDF(v->getRightChild());
 	cout << v->getValue() << ' ';
+#endif
+
 }
 
 
@@ -97,7 +112,11 @@ void printBlackHeight(const CRBTree<value_type_main, comp>& tree) {
 	recPrintBlackHeight(tree.getRoot());
 }
 
-
+int testOfDestructorAndCopyConstructor(const CRBTree<value_type_main, comp>& tree){
+	auto newTree(tree);
+	newTree.insert(1);
+	return 0;
+}
 
 int main(int argc, char** argv) {
 	CRBTree<value_type_main, comp> tree;
@@ -191,11 +210,17 @@ int main(int argc, char** argv) {
 		for(int i = 0; i < n; ++i){
 			tree.insert(rand() % 1000 - 100);
 		}
-	
-	
-		
 	}
 	
+	tree.size();
+	while(tree.size() != 1024 * 1024){
+		tree.insert(rand() * rand() * rand());
+	}
+	
+	tree.size();
+	for(int i = 0; i < 1024 * 1024; ++i){
+		tree.find(rand() * rand());
+	}
 	
 	cout << "Final check of RBTree" << endl;
 	PrintTree();
@@ -253,5 +278,8 @@ int main(int argc, char** argv) {
 	auto resC = tree.getRoot();
 	auto resD = tree.size();
 	
+	auto treeCop(tree);
+	tree.insert(1);
+	testOfDestructorAndCopyConstructor(tree);
 	return 0;
 }

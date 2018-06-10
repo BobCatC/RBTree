@@ -19,17 +19,22 @@ typedef CRBNode CLeftChildRBNode;
 typedef CRBNode CRightChildRBNode;
 typedef CRBNode CBrotherRBNode;
 
+enum ERBNodeColor { red, black };
+
 class CRBNode{
 public:
 	CRBNode(const value_type& value,
 			CParentRBNode* parent = nullptr,
 			CLeftChildRBNode* left_child = nullptr,
-			CRightChildRBNode* right_child = nullptr) :
+			CRightChildRBNode* right_child = nullptr,
+			ERBNodeColor color = red) :
 	_value(value),
 	_parent(parent),
 	_left_child(left_child),
 	_right_child(right_child),
-	_color(red) { }
+	_color(color) { }
+	
+	
 	
 	const value_type& getValue() const { return _value; }
 	
@@ -166,7 +171,7 @@ public:
 	
 protected:
 	value_type _value;
-	enum EColor { red, black } _color;
+	ERBNodeColor _color;
 	
 	CParentRBNode* _parent;
 	CLeftChildRBNode* _left_child;
