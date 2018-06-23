@@ -1,86 +1,117 @@
-//
-//  StdTreeFunctions.hpp
-//  RBTree
-//
-//  Created by Александр Пахомов on 22.05.2018.
-//  Copyright © 2018 Александр Пахомов. All rights reserved.
-//
-
 #ifndef StdTreeFunctions_h
 #define StdTreeFunctions_h
 
+/* 	 Always is included into CRBTree.h
+ *	( inside class CRBTree<type_name, comporator> )
+ */
 
-static CRBNode* findMax(CRBNode* root) {
-	CRBNode* crt = root;
-	if(crt != nullptr){
-		while(crt->fHasRightChild()){
-			crt = crt->getRightChild();
+private:
+
+	static CRBNode* findMax(CRBNode* root) {
+		CRBNode* crt = root;
+		if(crt != nullptr){
+			while(crt->hasRightChild()){
+				crt = crt->getRightChild();
+			}
 		}
+		return crt;
 	}
-	return crt;
-}
 
-static CRBNode* findMin(CRBNode* root) {
-	CRBNode* crt = root;
-	if(crt != nullptr){
-		while(crt->fHasLeftChild()){
-			crt = crt->getLeftChild();
+	static CRBNode* findMin(CRBNode* root) {
+		CRBNode* crt = root;
+		if(crt != nullptr){
+			while(crt->hasLeftChild()){
+				crt = crt->getLeftChild();
+			}
 		}
+		return crt;
 	}
-	return crt;
-}
 
-static CRBNode* findNextNode(CRBNode* root, CRBNode* start) {
-	CRBNode* crt = nullptr;
-	if(start->fHasRightChild()){
-		crt = findMin(start->getRightChild());
-	}
-	else{
-		crt = start->getParent();
-		while(crt != nullptr && start == crt->getRightChild()){
-			start = crt;
-			crt = crt->getParent();
+	static CRBNode* findNextNode(CRBNode* root, CRBNode* start) {
+		CRBNode* crt = nullptr;
+		if(start->hasRightChild()){
+			crt = findMin(start->getRightChild());
 		}
-	}
-	return crt;
-}
-
-static CRBNode* findPrevNode(CRBNode* root, CRBNode* start) {
-	CRBNode* crt = nullptr;
-	if(start->fHasLeftChild()){
-		crt = findMax(start->getLeftChild());
-	}
-	else{
-		crt = start->getParent();
-		while(crt != nullptr && start == crt->getLeftChild()){
-			start = crt;
-			crt = crt->getParent();
+		else{
+			crt = start->getParent();
+			while(crt != nullptr && start == crt->getRightChild()){
+				start = crt;
+				crt = crt->getParent();
+			}
 		}
+		return crt;
 	}
-	return crt;
-}
 
-
-
-static void freeMemOfTree(CRBNode* crt){
-	CRBNode* left, *right;
-	if(crt == nullptr)
-		return;
-	left = crt->getLeftChild();
-	right = crt->getRightChild();
-	delete crt;
-	freeMemOfTree(left);
-	freeMemOfTree(right);
-}
-
-static CRBNode* copyTree(CRBNode* crtOther, CRBNode* parent) {
-	CRBNode* crt = nullptr;
-	if(crtOther != nullptr){
-		crt = new CRBNode(crtOther->getValue(), parent, nullptr, nullptr, crt->isBlack() ? black : red);
-		crt->setLeftChild(copyTree(crtOther->getLeftChild(), crt));
-		crt->setRightChild(copyTree(crtOther->getRightChild(), crt));
+	static CRBNode* findPrevNode(CRBNode* root, CRBNode* start) {
+		CRBNode* crt = nullptr;
+		if(start->hasLeftChild()){
+			crt = findMax(start->getLeftChild());
+		}
+		else{
+			crt = start->getParent();
+			while(crt != nullptr && start == crt->getLeftChild()){
+				start = crt;
+				crt = crt->getParent();
+			}
+		}
+		return crt;
 	}
-	return crt;
-}
+
+	CRBNode* findNode(const value_type& value) const {
+		CRBNode* crt = _root;
+		CRBNode valueNode(value);
+		while(crt != nullptr){
+			if(valueNode > (*crt)){
+				crt = crt->getRightChild();
+			}
+			else{
+				if(valueNode != *crt){
+					crt = crt->getLeftChild();
+				}
+				else{
+					break;
+				}
+			}
+		}
+		return crt;
+	}
+
+
+	static void freeMemOfTree(CRBNode* crt){
+		CRBNode* left, *right;
+		if(crt == nullptr)
+			return;
+		left = crt->getLeftChild();
+		right = crt->getRightChild();
+		delete crt;
+		freeMemOfTree(left);
+		freeMemOfTree(right);
+	}
+
+	static CRBNode* copyTree(CRBNode* crtOther, CRBNode* parent) {
+		CRBNode* crt = nullptr;
+		if(crtOther != nullptr){
+			crt = new CRBNode(crtOther->getValue(), parent, nullptr, nullptr, crt->isBlack() ? black : red);
+			crt->setLeftChild(copyTree(crtOther->getLeftChild(), crt));
+			crt->setRightChild(copyTree(crtOther->getRightChild(), crt));
+		}
+		return crt;
+	}
+
+
 
 #endif /* StdTreeFunctions_h */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
